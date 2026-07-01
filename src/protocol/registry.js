@@ -11,7 +11,6 @@ class PacketRegistry {
     const handler = this.handlers.get(id);
 
     if (!handler) {
-      console.log(`Unknown packet: ${id}`);
       return;
     }
 

@@ -31,9 +31,6 @@ class Packet {
     this.writer.writeBytes(buffer);
   }
 
-  // Packet ID + Data, with NO outer length prefix. This is what
-  // NeoSocket#send() needs, since it has to decide (based on the live
-  // compression state of the connection) how to frame it on the wire.
   buildPayload() {
     const payload = new BufferWriter();
 
@@ -43,10 +40,6 @@ class Packet {
     return payload.toBuffer();
   }
 
-  // Full, uncompressed wire frame (Length + Packet ID + Data). Handy for
-  // quick standalone tests, but anything sent over a real NeoSocket should
-  // go through socket.sendPacket()/buildPayload() instead, so compression
-  // (once enabled mid-connection) is applied correctly.
   build() {
     const payloadBuffer = this.buildPayload();
 

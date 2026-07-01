@@ -5,9 +5,6 @@ const HandshakePacket = require("../protocol/handshake");
 const LoginStart = require("../protocol/loginStart");
 const logger = require("../utils/logger");
 
-// High-level bot client: owns a NeoSocket, drives it through
-// Handshake -> Login Start, and reconnects automatically if the
-// connection drops (unless told not to).
 class Client extends EventEmitter {
   constructor(options = {}) {
     super();
@@ -36,7 +33,7 @@ class Client extends EventEmitter {
     this.socket = socket;
 
     socket.on("connect", () => {
-      logger.info(`TCP connected to ${this.host}:${this.port} - sending handshake...`);
+      logger.info(`TCP connected to ${this.host}:${this.port} — sending handshake...`);
 
       const handshake = new HandshakePacket(this.host, this.port, 2);
       socket.send(handshake.buildPayload());

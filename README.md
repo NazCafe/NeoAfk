@@ -1,240 +1,521 @@
-# NeoAfk
-A lightweight, open-source Node.js AFK client for modern Minecraft, designed to support current versions with reconnect and anti-AFK features.
+🚀 NeoAfk
 
-AI-Assisted Development
+«A lightweight, modular, and educational Minecraft AFK bot built from scratch using the modern Minecraft protocol.»
 
-NeoAfk is a personal project developed and maintained by NazCafe.
-
-This project is built using an AI-assisted workflow. I use multiple AI assistants—including ChatGPT and Claude—as engineering partners to help with research, protocol analysis, debugging, code reviews, documentation, architecture discussions, and feature planning.
-
-Every implementation is reviewed, tested, integrated, and ultimately decided by me. AI suggestions are treated as recommendations rather than authoritative solutions, and working code is validated against real server behavior before becoming part of the project.
-
-In short:
-
-- Project vision: NazCafe
-- Architecture & final decisions: NazCafe
-- Implementation & testing: NazCafe, with AI assistance
-- Technical discussions and code suggestions: ChatGPT and Claude
-
-NeoAfk reflects a collaborative workflow between a human developer and modern AI tools, with the final responsibility for the code and project direction remaining with the project maintainer.
-
-# NeoAfk
-
-> A lightweight, modern Minecraft AFK bot built from scratch in Node.js.
-
-[![Status](https://img.shields.io/badge/status-pre--alpha-orange)]()
-[![Node.js](https://img.shields.io/badge/node-%3E%3D18-green)]()
-[![License](https://img.shields.io/badge/license-TBD-blue)]()
+"Status" (https://img.shields.io/badge/Status-Pre--Alpha-orange)
+"Node.js" (https://img.shields.io/badge/Node.js-18+-green)
+"Platform" (https://img.shields.io/badge/Platform-Render%20Supported-success)
+"Protocol" (https://img.shields.io/badge/Minecraft-Modern%20Protocol-blue)
+"License" (https://img.shields.io/badge/License-GPLv3-blue)
 
 ---
 
-## Overview
+👋 Welcome to NeoAfk
 
-NeoAfk is an educational and experimental Minecraft AFK bot that communicates directly with the Minecraft protocol instead of relying on existing bot frameworks.
+NeoAfk is an open-source Minecraft AFK bot designed with two goals in mind:
 
-The project was created to better understand the internals of modern Minecraft networking while building a lightweight, modular, and production-ready AFK bot.
+- Build a reliable AFK bot without relying on existing Minecraft bot frameworks.
+- Help developers understand how the modern Minecraft protocol works.
 
-Rather than wrapping an existing library, NeoAfk implements protocol handling from the ground up—including the modern Login, Configuration, and Play states introduced in recent Minecraft versions.
+Unlike many projects that wrap existing libraries, NeoAfk communicates directly with Minecraft servers through its own packet handling, protocol states, and networking implementation.
 
----
-
-## Features
-
-Current features include:
-
-- Modern protocol implementation
-- TCP socket communication
-- Binary packet reader and writer
-- VarInt encoding/decoding
-- UUID handling
-- Packet abstraction
-- Compression support
-- Login protocol
-- Configuration protocol
-- Registry synchronization
-- Play state transition
-- KeepAlive responses
-- Teleport confirmation
-- Modular packet handlers
+Whether you're here to automate gameplay, contribute to the project, or explore Minecraft networking, NeoAfk aims to provide a clean and educational codebase.
 
 ---
 
-## Planned Features
+✨ Why NeoAfk?
 
-- Automatic reconnect
+NeoAfk was created to answer a simple question:
+
+«Can a modern Minecraft AFK bot be built entirely from scratch while remaining lightweight, understandable, and open for learning?»
+
+The answer is yes.
+
+NeoAfk focuses on:
+
+- 🧩 Clean architecture
+- 📡 Native Minecraft protocol implementation
+- ⚡ Lightweight design
+- 📚 Educational value
+- 🔧 Modular packet handlers
+- ☁️ Cloud deployment support
+- 🌱 Long-term maintainability
+
+Every feature is implemented with readability and extensibility in mind.
+
+---
+
+🌟 Features
+
+Networking
+
+- ✅ Custom TCP client
+- ✅ Packet Reader
+- ✅ Packet Writer
+- ✅ VarInt encoding and decoding
+- ✅ UUID handling
+- ✅ Compression support
+
+---
+
+Protocol
+
+- ✅ Handshake
+- ✅ Login State
+- ✅ Configuration State
+- ✅ Play State
+- ✅ Registry synchronization
+- ✅ Plugin Message handling
+- ✅ Modern Minecraft protocol support
+
+---
+
+Gameplay
+
+- ✅ KeepAlive responses
+- ✅ Teleport confirmations
+- ✅ Player Loaded acknowledgement
+
+🚧 Planned
+
 - Human-like Anti-AFK
-- Configuration files
-- Environment variables
-- Cloud deployment
-- Docker support
+- Automatic reconnect
 - Runtime statistics
-- Health API
+- Chat handling
+- Command system
+
+---
+
+Deployment
+
+- ✅ Local execution
+- ✅ Render.com deployment
+- 🚧 Docker support (Planned)
+- 🚧 Additional cloud providers (Roadmap)
+
+---
+
+⚡ Quick Start
+
+Clone the repository
+
+git clone https://github.com/NazCafe/NeoAfk.git
+
+cd NeoAfk
+
+Install dependencies
+
+npm install
+
+Run NeoAfk
+
+node src/test/connect.js
+
+If everything is configured correctly, NeoAfk will connect to the Minecraft server, complete the Login and Configuration states, and enter the Play State.
+
+---
+
+🎉 Current Milestone
+
+NeoAfk has successfully achieved:
+
+- ✅ TCP networking
+- ✅ Packet serialization
+- ✅ Login implementation
+- ✅ Compression negotiation
+- ✅ Configuration implementation
+- ✅ Registry synchronization
+- ✅ Play State implementation
+- ✅ Render.com compatibility
+
+This marks the project's first complete end-to-end connection using NeoAfk's own protocol implementation.
+
+---
+
+📸 Preview
+
+Screenshots and demonstrations will be added as the project evolves.
+
+Planned additions include:
+
+- Connection logs
+- Render deployment dashboard
+- Protocol debugging output
+- Anti-AFK demonstration
+- Architecture diagrams
+
+---
+
+⚠️ Project Status
+
+NeoAfk is currently in Pre-Alpha.
+
+Core networking has been successfully implemented, including Login, Configuration, and Play State support. Active development is now focused on Anti-AFK behavior, automatic reconnect, cloud deployment improvements, and long-term stability.
+
+Feedback, bug reports, and contributions are always welcome.
+
+---
+
+📊 Project Progress
+
+NeoAfk is under active development. Progress is tracked below to provide transparency on completed features and upcoming milestones.
+
+Overall Progress          ████████░░ 80%
+
+Networking                ██████████ 100%
+Packet System             ██████████ 100%
+Handshake                 ██████████ 100%
+Login State               ██████████ 100%
+Compression               ██████████ 100%
+Configuration State       ██████████ 100%
+Registry Synchronization  ██████████ 100%
+Play State                ██████████ 100%
+
+Render Deployment         ██████████ 100%
+Documentation             █████████░ 90%
+
+Anti-AFK                  ██░░░░░░░░ 20%
+Reconnect                 ██░░░░░░░░ 20%
+Logging System            ░░░░░░░░░░ 0%
+Configuration System      ░░░░░░░░░░ 0%
+Docker Support            ░░░░░░░░░░ 0%
+
+---
+
+🗺️ Development Roadmap
+
+✅ Completed
+
+- Custom TCP networking
+- Packet Reader & Writer
+- Minecraft Handshake
+- Login State
+- Compression negotiation
+- Configuration State
+- Registry synchronization
+- Plugin Message support
+- Play State implementation
+- Render.com deployment support
+- Initial documentation
+
+---
+
+🚧 In Progress
+
+Current development focuses on:
+
+- Human-like Anti-AFK
+- Automatic reconnect
+- Runtime statistics
 - Better logging
-- Multi-server support
-- Plugin system (future)
-- Discord integration (future)
+- Configuration system
 
 ---
 
-## Project Goals
+🔮 Future Goals
 
-NeoAfk focuses on four principles:
+Planned improvements include:
 
-### Learn
-
-Understand how the Minecraft protocol works instead of treating it as a black box.
-
-### Lightweight
-
-Minimal dependencies.
-
-Simple architecture.
-
-Easy to read.
-
-### Modular
-
-Each protocol state should remain isolated and easy to maintain.
-
-### Reliable
-
-Suitable for long-running deployments with automatic recovery.
+- Docker deployment
+- Multi-server configuration
+- Runtime dashboard
+- Plugin system
+- Event system
+- Metrics collection
+- Web interface
+- Additional cloud deployment providers
+- Support for future Minecraft protocol versions
 
 ---
 
-## Project Status
+🛣️ Documentation Hub
 
-Current development stage:
-
-Pre-Alpha
-
-Current progress:
-
-- Foundation
-- Login
-- Configuration
-- Play State
-
-The bot is capable of successfully joining supported Minecraft servers.
+Choose the path that best matches your interests.
 
 ---
 
-## Documentation
+🟢 New Users
 
-See the documentation inside the `docs/` folder.
+If you simply want to run NeoAfk:
+
+1. README.md
+2. Deployment Guide
+3. Configuration
+4. FAQ
+5. Troubleshooting
+
+Estimated reading time:
+
+10–15 minutes
+
+---
+
+🟡 Contributors
+
+Interested in improving NeoAfk?
+
+Read in this order:
+
+1. README.md
+2. CONTRIBUTING.md
+3. Development Guide
+4. Architecture
+5. SECURITY.md
+
+Estimated reading time:
+
+20–30 minutes
+
+---
+
+🔴 Developers
+
+Want to understand the Minecraft protocol implementation?
+
+Recommended order:
+
+1. Architecture
+2. Minecraft Protocol
+3. Packet Flow
+4. Development Guide
+
+Estimated reading time:
+
+30–45 minutes
+
+---
+
+📚 Documentation Index
+
+Repository
+
+- README.md
+- ROADMAP.md
+- CHANGELOG.md
+- CONTRIBUTING.md
+- CODE_OF_CONDUCT.md
+- SECURITY.md
+- ACKNOWLEDGEMENTS.md
+- LICENSE
+
+---
+
+Technical Documentation
 
 - Architecture
-- Protocol
+- Minecraft Protocol
 - Packet Flow
-- Configuration
-- Deployment
-- Anti-AFK
-- Reconnect
-- Logging
-- Troubleshooting
+- Development Guide
 
 ---
 
-## Repository Structure
+User Documentation
 
-```
+- Configuration (Roadmap)
+- Deployment Guide
+- Logging (Roadmap)
+
+---
+
+Runtime Features
+
+- Anti-AFK (In Development)
+- Automatic Reconnect (In Development)
+
+---
+
+Help & Support
+
+- FAQ (Growing)
+- Troubleshooting (Growing)
+
+---
+
+🏗️ Repository Structure
+
 NeoAfk/
+│
+├── src/
+│   ├── connection/
+│   ├── protocol/
+│   ├── handlers/
+│   ├── play/
+│   ├── net/
+│   ├── utils/
+│   └── test/
+│
+├── docs/
+│
+├── README.md
+├── ROADMAP.md
+├── CHANGELOG.md
+├── CONTRIBUTING.md
+├── CODE_OF_CONDUCT.md
+├── SECURITY.md
+├── ACKNOWLEDGEMENTS.md
+└── LICENSE
 
-src/
-    protocol/
-    handlers/
-    play/
-    connection/
-    net/
-    utils/
-
-docs/
-
-README.md
-ROADMAP.md
-CHANGELOG.md
-```
-
----
-
-## Installation
-
-Clone the repository.
-
-```bash
-git clone https://github.com/NazCafe/NeoAfk.git
-```
-
-Install dependencies.
-
-```bash
-npm install
-```
-
-Run the bot.
-
-```bash
-node src/test/connect.js
-```
+The project is organized around a modular architecture where each component has a single responsibility, making NeoAfk easier to understand, maintain, and extend.
 
 ---
 
-## Development Philosophy
+🎯 Current Development Priorities
 
-NeoAfk intentionally avoids relying on existing Minecraft bot frameworks.
+The next major milestones for NeoAfk are:
 
-Instead, every protocol state is implemented and understood individually.
+1. Complete the Anti-AFK system.
+2. Implement automatic reconnect.
+3. Finalize the configuration system.
+4. Improve logging and diagnostics.
+5. Expand deployment options.
+6. Continue improving documentation.
 
-The objective is not only to create an AFK bot, but also to serve as a practical reference for learning modern Minecraft networking.
-
----
-
-## AI-Assisted Development
-
-NeoAfk is developed and maintained by **NazCafe**.
-
-This project follows an AI-assisted development workflow. Tools such as ChatGPT and Claude are used for architecture discussions, protocol research, debugging, documentation, and implementation guidance.
-
-All final design decisions, testing, integration, and maintenance are performed by the project maintainer.
+These priorities may evolve as the project grows and community feedback is incorporated.
 
 ---
 
-## Roadmap
+🤝 Contributing
 
-See:
+Contributions of all sizes are welcome!
 
-- ROADMAP.md
+Whether you're fixing a typo, reporting a bug, improving documentation, or implementing a new feature, your help is greatly appreciated.
 
----
+Ways you can contribute:
 
-## Contributing
+- 🐛 Report bugs
+- 💡 Suggest new features
+- 📖 Improve documentation
+- 🛠️ Fix issues
+- ⚡ Optimize performance
+- 🧪 Test new functionality
+- 💻 Submit Pull Requests
 
-Contributions are welcome after the first stable release.
+Before contributing, please read:
 
-See:
+- CONTRIBUTING.md
+- CODE_OF_CONDUCT.md
+- SECURITY.md
 
-CONTRIBUTING.md
-
----
-
-## Security
-
-Please report security issues responsibly.
-
-See:
-
-SECURITY.md
+Every contribution helps NeoAfk become a better project.
 
 ---
 
-## License
+🌍 Community
 
-The project license will be finalized before the first stable public release.
+NeoAfk is more than just an AFK bot.
+
+It is an educational open-source project that encourages learning, experimentation, and collaboration around Minecraft networking and protocol development.
+
+Whether you're an experienced developer or just beginning your programming journey, you're welcome here.
+
+Questions, ideas, constructive feedback, and discussions are always appreciated.
 
 ---
 
-## Acknowledgements
+❤️ Acknowledgements
 
-Thanks to the Minecraft community and protocol documentation projects whose research has helped improve understanding of the protocol over the years.
+NeoAfk is created and maintained by NazCafe.
 
-NeoAfk is an independent educational project and is not affiliated with Mojang Studios or Microsoft.
+This project has benefited from the support of the open-source community and modern AI-assisted development tools, helping accelerate research, debugging, documentation, and software design while keeping final implementation decisions under the maintainer's control.
+
+Special thanks to:
+
+- OpenAI (ChatGPT)
+- Anthropic (Claude)
+- The Minecraft community
+- Open-source contributors
+
+Additional details can be found in ACKNOWLEDGEMENTS.md.
+
+---
+
+📜 License
+
+NeoAfk is licensed under the GNU General Public License v3.0 (GPL-3.0).
+
+You are welcome to:
+
+- Use NeoAfk
+- Study the source code
+- Modify the project
+- Share improvements
+- Contribute back to the community
+
+Please refer to the LICENSE file for the complete license terms.
+
+---
+
+📦 First Public Release
+
+v0.1.0-pre-alpha
+
+Codename
+
+The First Successful Connection
+
+Release Highlights
+
+- ✅ Built a custom Minecraft networking stack.
+- ✅ Implemented the modern Handshake, Login, Configuration, and Play protocol states.
+- ✅ Added packet serialization and compression support.
+- ✅ Successfully joined a modern Minecraft server.
+- ✅ Added Render.com deployment support.
+- ✅ Established comprehensive project documentation.
+
+Current Limitations
+
+- 🚧 Anti-AFK is still under development.
+- 🚧 Automatic reconnect is in progress.
+- 🚧 Configuration system is planned.
+- 🚧 Logging improvements are planned.
+
+This release represents the first major milestone in NeoAfk's development and provides a solid foundation for future features.
+
+---
+
+🌱 Vision
+
+NeoAfk aims to become a lightweight, educational, and reliable Minecraft AFK bot while serving as a reference implementation for the modern Minecraft protocol.
+
+The long-term vision includes:
+
+- Stable long-running deployments
+- Human-like Anti-AFK behavior
+- Multi-version protocol support
+- Modular architecture
+- High-quality documentation
+- An active open-source community
+
+Every release moves the project one step closer to that goal.
+
+---
+
+⭐ Support NeoAfk
+
+If NeoAfk helped you, taught you something new, or you simply enjoy following its development, consider supporting the project.
+
+You can help by:
+
+- ⭐ Starring the repository
+- 🍴 Forking the project
+- 🐛 Reporting bugs
+- 💡 Suggesting features
+- 📖 Improving documentation
+- 💻 Contributing code
+- 📢 Sharing NeoAfk with others
+
+Every contribution, no matter how small, helps the project grow.
+
+---
+
+💬 Final Note
+
+Thank you for taking the time to visit NeoAfk.
+
+What began as a personal challenge to understand the Minecraft protocol has grown into an open-source project focused on learning, experimentation, and continuous improvement.
+
+Whether you choose to use NeoAfk, contribute to it, or simply learn from it, your interest and support are sincerely appreciated.
+
+Happy coding, and see you in-game!
+
+— NazCafe

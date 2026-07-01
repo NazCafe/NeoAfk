@@ -1,0 +1,17 @@
+services:
+  - type: worker
+    name: neoafk
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: MC_HOST
+        sync: false
+      - key: MC_PORT
+        value: "25565"
+      - key: MC_USERNAME
+        value: NeoAFK
+      - key: RECONNECT_DELAY_MS
+        value: "5000"
+      - key: NEOAFK_LOG_LEVEL
+        value: info

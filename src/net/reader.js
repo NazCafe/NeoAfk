@@ -44,9 +44,6 @@ class BufferReader {
     return bytes.toString("hex");
   }
 
-  // Returns the raw 8 bytes of a Long. We don't need the numeric value
-  // anywhere in NeoAFK (Keep Alive IDs are only ever echoed back verbatim),
-  // so handing back the raw bytes avoids BigInt math we don't need.
   readLong() {
     return this.readBytes(8);
   }

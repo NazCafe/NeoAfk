@@ -1,6 +1,3 @@
-// Small leveled logger used in place of scattered console.log calls, so log
-// noise (especially raw packet hex dumps) can be turned down without
-// hunting through every file.
 const LEVELS = ["debug", "info", "warn", "error"];
 
 let currentLevel = process.env.NEOAFK_LOG_LEVEL || "info";
@@ -25,7 +22,7 @@ module.exports = {
     if (LEVELS.includes(level)) currentLevel = level;
   },
   debug: (...args) => log("debug", args),
-  info: (...args) => log("info", args),
-  warn: (...args) => log("warn", args),
+  info:  (...args) => log("info",  args),
+  warn:  (...args) => log("warn",  args),
   error: (...args) => log("error", args),
 };

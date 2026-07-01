@@ -1,6 +1,6 @@
 class UUID {
   static write(writer) {
-    // Offline/cracked UUID = all zeros for now
+    // Offline-mode UUID: all zeros (cracked/offline servers only).
     for (let i = 0; i < 16; i++) {
       writer.writeByte(0);
     }

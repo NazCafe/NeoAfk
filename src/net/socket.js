@@ -13,14 +13,11 @@ const ClientInformation = require("../protocol/clientInformation");
 
 const logger = require("../utils/logger");
 
-// Clientbound Login packet IDs.
+// Clientbound packet IDs for the Login state.
 const LOGIN_CB = {
   DISCONNECT: 0x00,
   ENCRYPTION_REQUEST: 0x01,
-  LOGIN_SUCCESS: 0x02, // BUG FIX: code used to check for 3 here, which is
-  // actually Set Compression - Login Success would never be recognised on
-  // any server with compression disabled, and would be misread as if it
-  // were a Login Success on servers that *do* use compression.
+  LOGIN_SUCCESS: 0x02,
   SET_COMPRESSION: 0x03,
   LOGIN_PLUGIN_REQUEST: 0x04,
 };
@@ -34,17 +31,6 @@ class NeoSocket extends EventEmitter {
     this.connected = false;
 
     this.state = "LOGIN"; // LOGIN -> CONFIGURATION -> PLAY
-
-    // -1 means "compression disabled". Once a Set Compression packet is
-    // received this becomes the threshold (in bytes) above which packets
-    // are zlib-compressed - and from that point on EVERY packet (in both
-    // directions) must use the "with compression" frame format.
-    this.compressionThreshold = -1;
-
-    // Bytes received but not yet parsed into a complete packet. TCP is a
-    // byte stream, not a message stream - a single 'data' event can contain
-    // a partial packet, multiple packets, or both, so incoming bytes always
-    // have to be buffered and re-assembled instead of assumed-complete.
     this.recvBuffer = Buffer.alloc(0);
 
     this.configurationHandler = new ConfigurationHandler();
@@ -77,18 +63,15 @@ class NeoSocket extends EventEmitter {
     });
   }
 
-  // Pulls as many complete frames as are currently available out of
-  // recvBuffer. Anything incomplete is left in recvBuffer for the next
-  // 'data' event to top up.
   _drainBuffer() {
     while (true) {
       const lengthInfo = VarInt.tryDecode(this.recvBuffer, 0);
-      if (!lengthInfo) return; // don't even have the length VarInt yet
+      if (!lengthInfo) return;
 
       const { value: frameLength, length: lengthBytes } = lengthInfo;
       const totalNeeded = lengthBytes + frameLength;
 
-      if (this.recvBuffer.length < totalNeeded) return; // body not fully here yet
+      if (this.recvBuffer.length < totalNeeded) return;
 
       const frame = this.recvBuffer.slice(lengthBytes, totalNeeded);
       this.recvBuffer = this.recvBuffer.slice(totalNeeded);
@@ -101,9 +84,6 @@ class NeoSocket extends EventEmitter {
     }
   }
 
-  // frame = the bytes inside one Length-prefixed packet (i.e. everything
-  // after the outer Length VarInt). Resolves compression (if enabled) and
-  // dispatches the resulting [Packet ID][Data] to the right state handler.
   _handleFrame(frame) {
     let payload;
 
@@ -114,6 +94,7 @@ class NeoSocket extends EventEmitter {
       const { value: dataLength, length: dlBytes } = dataLenInfo;
       const rest = frame.slice(dlBytes);
 
+      // dataLength === 0 means the packet is below the threshold and not compressed.
       payload = dataLength === 0 ? rest : zlib.inflateSync(rest);
     } else {
       payload = frame;
@@ -141,31 +122,23 @@ class NeoSocket extends EventEmitter {
   _handleLogin(packetId, reader) {
     switch (packetId) {
       case LOGIN_CB.DISCONNECT: {
-        const reason = reader.readString(); // JSON Text Component (a plain string here)
+        const reason = reader.readString();
         logger.warn("Disconnected during login:", reason);
         this.close();
         return;
       }
 
       case LOGIN_CB.ENCRYPTION_REQUEST:
-        // NeoAFK only supports offline-mode (cracked) servers. We can't
-        // perform Mojang session authentication / RSA encryption, so there
-        // is nothing useful we can do here except disconnect cleanly.
         logger.error(
-          "Server requested encryption (online-mode auth), which NeoAFK doesn't support. " +
-            "Connect to an offline-mode server instead."
+          "Server requested encryption (online-mode). NeoAFK only supports offline-mode servers."
         );
         this.close();
         return;
 
       case LOGIN_CB.LOGIN_SUCCESS: {
-        logger.info("Login successful - acknowledging and entering Configuration state.");
-
+        logger.info("Login successful — entering Configuration state.");
         this.sendPacket(new LoginAcknowledged());
         this.state = "CONFIGURATION";
-
-        // Real clients send Client Information immediately on entering
-        // Configuration rather than waiting to be asked for it.
         this.sendPacket(new ClientInformation());
         return;
       }
@@ -178,14 +151,10 @@ class NeoSocket extends EventEmitter {
       }
 
       case LOGIN_CB.LOGIN_PLUGIN_REQUEST: {
-        // Some modded servers (NeoForge included) may use this for extra
-        // handshake data. We mimic vanilla client behaviour and say we
-        // didn't understand it - a NeoForge server should treat that the
-        // same way it treats any vanilla client connecting.
         const messageId = reader.readVarInt();
         const response = new Packet(LOGIN_PLUGIN_RESPONSE_ID);
         response.writeVarInt(messageId);
-        response.writeBoolean(false); // "understood" = false, no data follows
+        response.writeBoolean(false);
         this.sendPacket(response);
         return;
       }
@@ -195,14 +164,12 @@ class NeoSocket extends EventEmitter {
     }
   }
 
-  // Sends a Packet-like object (anything with buildPayload()), applying
-  // the connection's current compression framing.
   sendPacket(packet) {
     this.send(packet.buildPayload());
   }
 
-  // Sends a raw payload (Packet ID + Data, no length prefix yet) applying
-  // the correct wire framing for the connection's current compression state.
+  // Frames a raw payload (Packet ID + Data) with the correct wire framing
+  // for the current compression state and writes it to the socket.
   send(payload) {
     if (!this.socket || this.socket.destroyed) return;
 
@@ -214,8 +181,7 @@ class NeoSocket extends EventEmitter {
         const compressed = zlib.deflateSync(payload);
         inner = Buffer.concat([VarInt.encode(payload.length), compressed]);
       } else {
-        // Below threshold: still uses the "with compression" packet shape,
-        // just with Data Length = 0 to mark it as not actually compressed.
+        // Below threshold: Data Length is set to 0 to indicate uncompressed.
         inner = Buffer.concat([VarInt.encode(0), payload]);
       }
       frame = Buffer.concat([VarInt.encode(inner.length), inner]);

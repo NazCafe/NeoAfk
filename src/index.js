@@ -1,32 +1,22 @@
 #!/usr/bin/env node
-// NeoAFK entry point.
-// Usage: node src/index.js [host:port] [username]
 
 const Client = require("./client/client");
 const logger = require("./utils/logger");
 
-function parseArgs(argv) {
-  const [, , hostPort, username] = argv;
+const host = process.env.MC_HOST || process.argv[2]?.split(":")[0];
+const port = parseInt(process.env.MC_PORT || process.argv[2]?.split(":")[1] || "25565", 10);
+const username = process.env.MC_USERNAME || process.argv[3] || "NeoAFK";
+const reconnectDelayMs = parseInt(process.env.RECONNECT_DELAY_MS || "5000", 10);
 
-  // Falls back to the dev's original test server if nothing is given.
-  let host = "Nazmoddedserver.aternos.me";
-  let port = 57884;
-
-  if (hostPort) {
-    const [h, p] = hostPort.split(":");
-    host = h;
-    if (p) port = parseInt(p, 10);
-  }
-
-  return { host, port, username: username || "NeoAFK" };
+if (!host) {
+  logger.error("No server host provided. Set MC_HOST or pass host:port as the first argument.");
+  process.exit(1);
 }
-
-const { host, port, username } = parseArgs(process.argv);
 
 logger.info("NeoAFK is starting...");
 logger.info(`Target: ${host}:${port} as "${username}"`);
 
-const bot = new Client({ host, port, username });
+const bot = new Client({ host, port, username, reconnectDelayMs });
 
 bot.on("alive", () => {
   logger.info("Bot is alive and in the world.");
