@@ -163,21 +163,33 @@ NeoAfk is under active development. Progress is tracked below to provide transpa
 Overall Progress          ████████░░ 80%
 
 Networking                ██████████ 100%
+
 Packet System             ██████████ 100%
+
 Handshake                 ██████████ 100%
+
 Login State               ██████████ 100%
+
 Compression               ██████████ 100%
+
 Configuration State       ██████████ 100%
+
 Registry Synchronization  ██████████ 100%
+
 Play State                ██████████ 100%
 
 Render Deployment         ██████████ 100%
+
 Documentation             █████████░ 90%
 
 Anti-AFK                  ██░░░░░░░░ 20%
+
 Reconnect                 ██░░░░░░░░ 20%
+
 Logging System            ░░░░░░░░░░ 0%
+
 Configuration System      ░░░░░░░░░░ 0%
+
 Docker Support            ░░░░░░░░░░ 0%
 
 ---
@@ -508,6 +520,24 @@ Every contribution, no matter how small, helps the project grow.
 
 ---
 
+📜 License
+
+Copyright © 2026 NazCafe
+
+NeoAfk is free software licensed under the GNU General Public License v3.0 (GPL-3.0).
+
+You are free to:
+
+- Use NeoAfk for personal or commercial purposes.
+- Study how the software works.
+- Modify the source code.
+- Share copies of the software.
+- Contribute improvements back to the project.
+
+If you distribute NeoAfk or a modified version, you must comply with the terms of the GPL-3.0 license, including preserving the license and providing the corresponding source code where required.
+
+See the "LICENSE" file for the complete license text.
+
 💬 Final Note
 
 Thank you for taking the time to visit NeoAfk.
@@ -519,3 +549,4 @@ Whether you choose to use NeoAfk, contribute to it, or simply learn from it, you
 Happy coding, and see you in-game!
 
 — NazCafe
+
