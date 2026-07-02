@@ -10,21 +10,10 @@ function timestamp() {
   return new Date().toISOString().split("T")[1].replace("Z", "");
 }
 
-// Redact common sensitive values before logging
-function sanitize(value) {
-  if (typeof value !== "string") return value;
-
-  return value
-    .replace(/token=[^\s]+/gi, "token=[REDACTED]")
-    .replace(/password=[^\s]+/gi, "password=[REDACTED]")
-    .replace(/authorization:[^\n]+/gi, "Authorization: [REDACTED]");
-}
-
 function log(level, args) {
   if (!shouldLog(level)) return;
 
   const prefix = `[${timestamp()}] [${level.toUpperCase()}]`;
-
   const fn =
     level === "error"
       ? console.error
@@ -32,7 +21,7 @@ function log(level, args) {
       ? console.warn
       : console.log;
 
-  fn(prefix, ...args.map(sanitize));
+  fn(prefix, ...args);
 }
 
 module.exports = {

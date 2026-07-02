@@ -24,7 +24,8 @@ if (!host) {
 }
 
 logger.info("NeoAFK is starting...");
-logger.info(`Target: ${host}:${port} as "${username}"`);
+logger.info(`Target: ${host}:${port}`);
+logger.debug(`Bot username configured.`);
 
 const bot = new Client({ host, port, username, reconnectDelayMs });
 
