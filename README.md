@@ -2,32 +2,6 @@
 >
 > NeoAfk is under active development. Features, APIs, and documentation may change between releases. Feedback and contributions are welcome.
 
->⚠️ Important Notes
->
->Before using NeoAfk, please read the following:
->
->- NeoAfk is currently in Alpha (v0.2.0). Features and protocol support are still under active development.
->- Supported target: Modern Minecraft Java Edition servers using the current implemented protocol.
->- NeoForge support: Experimental. Some NeoForge servers may require additional protocol or mod-handshake implementation before the bot can fully join.
->- Online-mode servers: Currently not supported. NeoAfk only works with offline-mode (cracked) servers at this time. Servers requiring Mojang/Microsoft authentication will disconnect during login.
->- No mod loading: NeoAfk is not a Minecraft client and does not load Forge, NeoForge, Fabric, or other gameplay mods. It only implements the Minecraft network protocol.
->- Packet changes: Mojang frequently changes packet IDs and login/configuration behavior between Minecraft versions. Protocol updates may be required after major releases.
->- Experimental project: Expect occasional bugs, protocol incompatibilities, and incomplete features while development continues.
->
->Before Reporting an Issue
->
->Please include:
->
->- NeoAfk version
->- Minecraft version
->- Server software (Vanilla, Paper, NeoForge, etc.)
->- Whether the server is online-mode or offline-mode
->- Complete console/log output
->- Any installed server mods or plugins that may affect login
->
->Providing this information greatly speeds up debugging and issue resolution.
-
-
 🚀 NeoAfk
 
 «A lightweight, modular, and educational Minecraft AFK bot built from scratch using the modern Minecraft protocol.»
@@ -71,7 +45,9 @@ Requirements
 
 - Node.js 18 or later
 - npm
-- A Minecraft Java Edition server
+- A Minecraft Java Edition server running in **offline-mode** ("cracked").
+  Online-mode (Microsoft-authenticated) servers aren't supported yet — see
+  `docs/getting-started/faq.md` and `docs/reference/troubleshooting.md`.
 
 Clone the repository
 
