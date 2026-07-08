@@ -3,12 +3,12 @@ const Types = require("../net/types");
 const UUID = require("../net/uuid");
 
 class LoginStart {
-  constructor(username) {
+  constructor(username, uuid) {
     this.username = username;
 
     this.packet = new Packet(0x00);
     Types.writeString(this.packet.writer, username);
-    UUID.write(this.packet.writer);
+    UUID.write(this.packet.writer, uuid);
   }
 
   buildPayload() {

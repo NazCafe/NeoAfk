@@ -8,6 +8,31 @@ The format is based on Keep a Changelog and follows Semantic Versioning (SemVer)
 
 [Unreleased]
 
+Added
+
+- Full online-mode (Microsoft/Xbox account) support. The same bot now
+  joins both offline-mode and online-mode servers:
+  - Microsoft device-code login, Xbox Live / XSTS / Minecraft Services
+    auth chain, and a one-time local login script for obtaining a
+    reusable refresh token (`src/auth/microsoftAuth.js`,
+    `scripts/microsoft-login.js`).
+  - Silent token refresh on every connect/reconnect attempt, with
+    automatic fallback to the offline-mode identity if authentication
+    isn't configured or fails, rather than crashing.
+  - Full Encryption Request/Response handshake: RSA (PKCS#1 v1.5)
+    encryption of the shared secret and verify token, Minecraft's
+    non-standard signed-BigInteger server-hash algorithm (verified
+    against Mojang's published test vectors), the Mojang session-join
+    call, and AES-128/CFB8 encryption of the entire connection from that
+    point on (`src/net/crypto.js`, `src/net/socket.js`,
+    `src/auth/sessionJoin.js`).
+  - Verified end-to-end against a fake online-mode server performing a
+    real RSA handshake and real AES/CFB8 encryption through Configuration
+    and Play, including compression interacting correctly with
+    encryption.
+  - Credentials are never logged; see
+    `docs/getting-started/microsoft-auth.md` for setup and safety notes.
+
 Planned
 
 - Human-like Anti-AFK module (head rotation, movement, configurable behaviour).

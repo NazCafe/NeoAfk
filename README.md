@@ -2,35 +2,9 @@
 >
 > NeoAfk is under active development. Features, APIs, and documentation may change between releases. Feedback and contributions are welcome.
 
->⚠️ Important Notes
->
->Before using NeoAfk, please read the following:
->
->- NeoAfk is currently in Alpha (v0.2.0). Features and protocol support are still under active development.
->- Supported target: Modern Minecraft Java Edition servers using the current implemented protocol.
->- NeoForge support: Experimental. Some NeoForge servers may require additional protocol or mod-handshake implementation before the bot can fully join.
->- Online-mode servers: Currently not supported. NeoAfk only works with offline-mode (cracked) servers at this time. Servers requiring Mojang/Microsoft authentication will disconnect during login.
->- No mod loading: NeoAfk is not a Minecraft client and does not load Forge, NeoForge, Fabric, or other gameplay mods. It only implements the Minecraft network protocol.
->- Packet changes: Mojang frequently changes packet IDs and login/configuration behavior between Minecraft versions. Protocol updates may be required after major releases.
->- Experimental project: Expect occasional bugs, protocol incompatibilities, and incomplete features while development continues.
->
->Before Reporting an Issue
->
->Please include:
->
->- NeoAfk version
->- Minecraft version
->- Server software (Vanilla, Paper, NeoForge, etc.)
->- Whether the server is online-mode or offline-mode
->- Complete console/log output
->- Any installed server mods or plugins that may affect login
->
->Providing this information greatly speeds up debugging and issue resolution.
-
-
 🚀 NeoAfk
 
-«A lightweight, modular, and educational Minecraft AFK bot built from scratch using the modern Minecraft protocol.»
+«A lightweight, dependency-free Minecraft Java Edition protocol client, implemented entirely from scratch — with an AFK bot built on top of it as the flagship use case.»
 
 [![Status](https://img.shields.io/badge/Status-Alpha-yellow)](#)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green)](#)
@@ -42,22 +16,40 @@
 
 📖 About
 
-NeoAfk is an open-source Minecraft AFK bot focused on education, reliability, and simplicity.
+NeoAfk started as an AFK bot, but it's grown into something broader: a
+full Minecraft Java Edition network client, implemented directly against
+the protocol with zero external dependencies — no Mineflayer, no
+node-minecraft-protocol, nothing. It speaks Handshake, Login,
+Configuration, and Play; handles compression; passes the NeoForge/Forge
+modded-server handshake; resolves dynamic-port hosts (like Aternos) via
+DNS SRV; and authenticates real Microsoft/Xbox accounts for online-mode
+servers, with full RSA/AES encryption handshake support.
 
-Instead of relying on existing Minecraft bot frameworks, NeoAfk implements the Minecraft protocol directly, making it a valuable learning resource for developers interested in networking, packet serialization, and protocol design.
+Staying connected AFK is the first thing built on top of that
+foundation, and the reason the project exists — but the protocol layer
+underneath it is general-purpose, and a valuable learning resource on its
+own for anyone interested in networking, packet serialization, or
+protocol design.
 
 ---
 
 ✨ Features
 
-- ✅ Custom Minecraft networking implementation
+Protocol / networking core
+
+- ✅ Custom Minecraft networking implementation (zero dependencies)
 - ✅ Handshake → Login → Configuration → Play
 - ✅ Packet serialization and deserialization
 - ✅ Compression support
 - ✅ Registry synchronization
+- ✅ NeoForge / Forge modded-server handshake compatibility
+- ✅ DNS SRV auto-discovery (handles hosts with dynamic ports, e.g. Aternos)
+- ✅ Microsoft/Xbox account authentication for online-mode servers, with automatic fallback to offline-mode (see `docs/getting-started/microsoft-auth.md`)
+
+AFK bot / operations
+
 - ✅ Automatic reconnect
 - ✅ Environment-variable configuration
-- ✅ DNS SRV auto-discovery (handles hosts with dynamic ports, e.g. Aternos)
 - ✅ Render.com deployment support (HTTP health endpoint + blueprint)
 - 🚧 Human-like Anti-AFK (Planned)
 - 🚧 Docker support (Planned)
@@ -71,9 +63,9 @@ Requirements
 
 - Node.js 18 or later
 - npm
-- A Minecraft Java Edition server running in **offline-mode** ("cracked").
-  Online-mode (Microsoft-authenticated) servers aren't supported yet — see
-  `docs/getting-started/faq.md` and `docs/reference/troubleshooting.md`.
+- A Minecraft Java Edition server, offline-mode or online-mode. For
+  online-mode, you'll also need a free Azure app registration — see
+  `docs/getting-started/microsoft-auth.md`.
 
 Clone the repository
 

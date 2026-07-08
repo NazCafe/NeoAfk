@@ -232,6 +232,30 @@ Status:
 
 ---
 
+# Phase 9.5 — Online-Mode Authentication
+
+## Goal
+
+Support online-mode (Microsoft-authenticated) servers, not just offline-mode.
+
+### Completed
+
+- Azure app registration flow documented (`docs/getting-started/microsoft-auth.md`)
+- Full Microsoft → Xbox Live → XSTS → Minecraft Services auth chain (`src/auth/microsoftAuth.js`)
+- One-time local login script (`scripts/microsoft-login.js`), producing a reusable refresh token
+- Bot-side silent token refresh on every connect/reconnect attempt, with safe fallback to offline-mode identity on any failure
+- Real username/UUID in Login Start when authenticated
+- Encryption Request/Response handling (`src/net/socket.js`, `src/net/crypto.js`)
+- Minecraft's non-standard signed-BigInteger server-hash algorithm, verified against Mojang's published test vectors
+- Mojang session-server join call (`src/auth/sessionJoin.js`)
+- AES/CFB8 encryption of the full connection from Encryption Response onward (Configuration + Play), verified end-to-end against a fake online-mode server including compression interacting correctly with encryption
+
+Status:
+
+✅ Complete — same bot now joins both offline-mode and online-mode servers, tested end-to-end against fake servers for both
+
+---
+
 # Phase 10 — Monitoring
 
 ## Planned
@@ -304,6 +328,7 @@ Every protocol state is implemented step-by-step with an emphasis on clean archi
 | Configuration System | 🚧 Mostly Complete |
 | Logging | 🚧 In Progress |
 | Deployment | 🚧 In Progress |
+| Online-Mode Authentication | ✅ Complete |
 | Monitoring | ⬜ Planned |
 | Future Features | ⬜ Planned |
 

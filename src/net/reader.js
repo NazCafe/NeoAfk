@@ -52,6 +52,13 @@ class BufferReader {
     const bytes = this.readBytes(4);
     return bytes.readInt32BE(0);
   }
+
+  // A VarInt length prefix followed by that many raw bytes - used for the
+  // Public Key and Verify Token fields in Encryption Request.
+  readByteArray() {
+    const length = this.readVarInt();
+    return this.readBytes(length);
+  }
 }
 
 module.exports = BufferReader;

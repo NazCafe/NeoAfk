@@ -5,11 +5,14 @@ const EventEmitter = require("events");
 const BufferReader = require("./reader");
 const VarInt = require("./varint");
 const Packet = require("./packet");
+const MCCrypto = require("./crypto");
 
 const ConfigurationHandler = require("../protocol/configuration");
 const PlayHandler = require("../protocol/play");
 const LoginAcknowledged = require("../protocol/loginAcknowledged");
 const ClientInformation = require("../protocol/clientInformation");
+const EncryptionResponse = require("../protocol/encryptionResponse");
+const { joinServerSession } = require("../auth/sessionJoin");
 
 const logger = require("../utils/logger");
 
@@ -34,6 +37,19 @@ class NeoSocket extends EventEmitter {
     this.compressionThreshold = -1;
     this.recvBuffer = Buffer.alloc(0);
 
+    // Set once encryption is enabled (online-mode only). AES/CFB8 stream
+    // ciphers, continuously updated for the rest of the connection - never
+    // reset per-packet.
+    this.cipher = null;
+    this.decipher = null;
+
+    // Optional Microsoft/Minecraft auth info, set externally (by Client)
+    // before connect() if the bot is authenticating with a real account:
+    // { accessToken, uuid, username }. If null, an Encryption Request from
+    // the server can't be answered and the connection is cleanly refused,
+    // same as before.
+    this.auth = null;
+
     this.configurationHandler = new ConfigurationHandler();
     this.playHandler = new PlayHandler();
   }
@@ -48,6 +64,7 @@ class NeoSocket extends EventEmitter {
     });
 
     this.socket.on("data", (chunk) => {
+      if (this.decipher) chunk = this.decipher.update(chunk);
       this.recvBuffer = this.recvBuffer.length === 0 ? chunk : Buffer.concat([this.recvBuffer, chunk]);
       this._drainBuffer();
     });
@@ -130,10 +147,7 @@ class NeoSocket extends EventEmitter {
       }
 
       case LOGIN_CB.ENCRYPTION_REQUEST:
-        logger.error(
-          "Server requested encryption (online-mode). NeoAFK only supports offline-mode servers."
-        );
-        this.close();
+        this._handleEncryptionRequest(reader);
         return;
 
       case LOGIN_CB.LOGIN_SUCCESS: {
@@ -165,6 +179,62 @@ class NeoSocket extends EventEmitter {
     }
   }
 
+  // Handles a clientbound Encryption Request (Login, id 0x01). Only
+  // reachable on online-mode servers. Requires this.auth to have been set
+  // externally (by Client, from a successful Microsoft authentication)
+  // before connecting - without it, there is no account to join the
+  // session with, so the connection is cleanly refused.
+  async _handleEncryptionRequest(reader) {
+    let serverId, publicKeyDer, verifyToken;
+
+    try {
+      serverId = reader.readString();
+      publicKeyDer = reader.readByteArray();
+      verifyToken = reader.readByteArray();
+      // Should Authenticate (1.20.5+, boolean, appended last) isn't read
+      // here - NeoAFK only supports the "should authenticate" path today,
+      // so its value wouldn't change any behavior yet.
+    } catch (err) {
+      logger.error("Malformed Encryption Request:", err.message);
+      this.close();
+      return;
+    }
+
+    if (!this.auth) {
+      logger.error(
+        "Server requested encryption (online-mode), but no Microsoft account is configured. " +
+          "Set MS_CLIENT_ID and MS_REFRESH_TOKEN to join online-mode servers - see docs/getting-started/microsoft-auth.md."
+      );
+      this.close();
+      return;
+    }
+
+    try {
+      const sharedSecret = MCCrypto.generateSharedSecret();
+      const serverHash = MCCrypto.minecraftServerHash(serverId, sharedSecret, publicKeyDer);
+
+      logger.info("Joining Mojang session server...");
+      await joinServerSession(this.auth.accessToken, this.auth.uuid, serverHash);
+
+      const encryptedSecret = MCCrypto.rsaEncrypt(publicKeyDer, sharedSecret);
+      const encryptedToken = MCCrypto.rsaEncrypt(publicKeyDer, verifyToken);
+
+      this.sendPacket(new EncryptionResponse(encryptedSecret, encryptedToken));
+
+      // The client enables encryption immediately upon sending Encryption
+      // Response, before any confirmation from the server - the very next
+      // packet received (Login Success) will already be encrypted.
+      const { cipher, decipher } = MCCrypto.createCiphers(sharedSecret);
+      this.cipher = cipher;
+      this.decipher = decipher;
+
+      logger.info("Encryption enabled.");
+    } catch (err) {
+      logger.error("Online-mode authentication failed:", err.message);
+      this.close();
+    }
+  }
+
   sendPacket(packet) {
     this.send(packet.buildPayload());
   }
@@ -190,7 +260,7 @@ class NeoSocket extends EventEmitter {
       frame = Buffer.concat([VarInt.encode(payload.length), payload]);
     }
 
-    this.socket.write(frame);
+    this.socket.write(this.cipher ? this.cipher.update(frame) : frame);
   }
 
   close() {

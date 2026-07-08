@@ -1,14 +1,18 @@
 # Troubleshooting
 
-## `[ERROR] Server requested encryption (online-mode). NeoAFK only supports offline-mode servers.`
+## `Server requested encryption (online-mode), but no Microsoft account is configured.`
 
 Your target server has online-mode (Microsoft/Mojang account
-authentication) enabled. NeoAfk currently only supports offline-mode
-("cracked") servers — full Microsoft account authentication is planned
-(see `ROADMAP.md`) but not yet implemented, so the bot correctly
-disconnects here instead of failing unpredictably.
+authentication) enabled, and NeoAfk isn't configured with a Microsoft
+account. Two options:
 
-**Fix, on Aternos:**
+**Option A — join with a real account:** follow
+`docs/getting-started/microsoft-auth.md` (one-time Azure app
+registration + local login script, ~5 minutes). Once `MS_CLIENT_ID` and
+`MS_REFRESH_TOKEN` are set, NeoAfk authenticates automatically on every
+connect/reconnect.
+
+**Option B — switch the server to offline-mode instead**, on Aternos:
 
 1. Go to `https://aternos.org/options`
 2. Enable the **"Cracked"** toggle (settings save automatically)
