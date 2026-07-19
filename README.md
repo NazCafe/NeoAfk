@@ -1,6 +1,6 @@
 > ⚠️ **Alpha Notice**
 >
-> NeoAfk is under active development. Features, APIs, and documentation may change between releases. Feedback and contributions are welcome.
+> NeoAfk is under paused or literal stopped development, see more on Youtube Channel Nazeus Creates. Features, APIs, and documentation may change between releases. Feedback and contributions are welcome.
 
 🚀 NeoAfk
 
